@@ -105,8 +105,9 @@ class Game:
 
     def run(self):
         counter = 0
-        while(True):
-            self.canvas.delete('all')
+        while True:
+            self.canvas.delete(ALL)  # Correção aqui
+
             self.showScore()
 
             for i in range(len(self.vel)-1, 0, -1):
@@ -116,56 +117,37 @@ class Game:
                 self.snake[i].velx = self.vel[i][0]
                 self.snake[i].vely = self.vel[i][1]
 
-            if(self.snake[0].pos() == self.food[0].pos()):
+            if self.snake[0].pos() == self.food[0].pos():
                 self.food[0].x = random.randint(grid_size, (width/grid_size))*grid_size-grid_size
                 self.food[0].y = random.randint(grid_size, (heigh/grid_size))*grid_size-grid_size
-                self.vel.append([0,0])
+                self.vel.append([0, 0])
                 self.snake.append(square(self.snake[-1].x, self.snake[-1].y, self.snake[0].color))
                 self.eatFood()
 
             for s in self.snake:
                 s.update()
                 self.canvas.create_polygon(s.pos(), fill=s.color)
-                
+
             for f in self.food:
-                f.update();
+                f.update()
                 self.canvas.create_polygon(f.pos(), fill=f.color)
-            
-            for i in range(2, len(self.snake)  ):
-                if(counter < 1):
+
+            for i in range(2, len(self.snake)):
+                if counter < 1:
                     counter += 1
-                elif(self.snake[0].pos() == self.snake[i].pos()):
+                elif self.snake[0].pos() == self.snake[i].pos():
                     score_message = f"GAME OVER!!!\nScore: {self.score}\n\nDeseja Jogar Novamente?"
                     play_again = showinfo(title="Game Over", message=score_message, type="yesno")
-                    
-                    if play_again == "true":
-                        self.quitGame()
-                        self.resetGame()
-                        self.canvas.delete('false')
-                       
-                        s = square(20, 20, '#800080')
-                        s1 = square(20, 20 ,'#800080')
-                        s2 = square(20, 20, '#800080')
-                        s3 = square(20, 20, '#800080')
 
-                        f = square(random.randint(grid_size,( width/grid_size))*grid_size - grid_size, random.randint(grid_size, (heigh/grid_size))*grid_size - grid_size, 'purple')
-        
-                        self.snake = [s, s1, s2, s3]
-                        self.food = [f]
-                        self.vel = [[20,0], [0,0], [0,0], [0,0]]
-                        
+                    if play_again:
+                        self.resetGame()
                     else:
                         self.window.destroy()
                         break
-                    
-                    if self.canvas:
-                        self.canvas('all')
-        
 
             self.canvas.update()
             self.canvas.after(100)
-            
-            
+
         self.window.mainloop()
             
 g = Game("Jogo da cobrinha do rick")
